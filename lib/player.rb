@@ -4,6 +4,7 @@ class Player
     attr_accessor :on_ground, :invulnerable, :damage, :lives, :walking, :stuck, :speed, :vel_y, :g, :winner, :dead
 
     def initialize(window)
+        @window = window
         @x = 200
         @y = 100
         @image = Gosu::Image.new('media/player.png')
@@ -118,13 +119,14 @@ class Player
             jumping
             @jump_sound.play
         end
+        @window.music.stop
         @win_sound.play
-
         @x -= 5
     end
 
     def dead?
         @dead = true
+        @window.music.stop
         @lose_sound.play
     end
 

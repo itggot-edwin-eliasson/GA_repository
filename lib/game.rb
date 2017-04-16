@@ -1,18 +1,20 @@
 
 class Game < Gosu::Window
 
+    attr_accessor :music
     def initialize
         super 640, 480, false, (1000/60)
         self.caption = "Boyert Adventures"
         @background_image = Gosu::Image.new('media/background.jpg')
         @sel_sound = Gosu::Sample.new('media/Pickup_00.wav')
-
+        @music = Gosu::Song.new('media/Loop_1.ogg')
 
         setup
     end
 
     def setup
         @start_menu = StartMenu.new(self)
+        @music.play(true)
     end
 
     def button_down(id)

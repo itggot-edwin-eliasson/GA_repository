@@ -196,7 +196,7 @@ class CollisionManager
                 @player.win
             end
         else
-            @player.jumping
+            @player.on_ground = false
         end
         enemy_map_collision
     end
