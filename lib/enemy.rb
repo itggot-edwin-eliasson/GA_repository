@@ -14,6 +14,7 @@ class Enemy
         @vel_y = 0
         @on_ground = false
         @alive = true
+        @death_sound = Gosu::Sample.new('media/SFX_Jump_09.wav')
     end
 
     def height
@@ -45,6 +46,7 @@ class Enemy
 
     def kill
         @alive = false
+        @death_sound.play
     end
 
     def alive?

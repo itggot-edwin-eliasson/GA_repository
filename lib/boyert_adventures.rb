@@ -5,6 +5,10 @@ class BoyertAdventures
     def initialize(window)
         @window = window
         @background_image = Gosu::Image.new('media/background.jpg')
+        @win_txt = Gosu::Image.from_text('YOU WIN!', 72, {font: 'media/Fipps-Regular.ttf'})
+        @lose_txt = Gosu::Image.from_text('GAME OVER', 72, {font: 'media/Fipps-Regular.ttf'})
+        @lvl_txt = Gosu::Font.new( 32, {name: 'media/Fipps-Regular.ttf'})
+
 
         setup
     end
@@ -17,7 +21,7 @@ class BoyertAdventures
         @collision_manager = CollisionManager.new(@player, @map, @enemies)
 
         @score = 10000000
-        @score_text = Gosu::Font.new(@window, 'Fipps-Regular', 32)
+        @score_text = Gosu::Font.new(32, {name: 'media/Fipps-Regular.ttf'})
     end
 
     def draw
@@ -30,10 +34,20 @@ class BoyertAdventures
         @collision_manager.draw(@camera)
         @background_image.draw(0,0,-2)
         @map.draw
-        @score_text.draw("Score: #{@score}", 480, 10, 3, 1.0, 1.0, 0xff_ffffff)
+        @score_text.draw("SCORE: #{@score}", 480, 10, 10, 1.0, 1.0, 0xff_ffffff)
 
         @player.lives.each_with_index do |life, i|
             life.draw(10 + (life.width + 10) * i, 10, 3)
+        end
+
+        @lvl_txt.draw("LEVEL: #{@map.level}", @window.width/2 - 25, 10, 10, 1.0, 1.0, 0xff_Ffffff)
+
+        if @player.winner
+            @win_txt.draw_rot(@window.width/2, @window.height/2 - 30, 10, 0, 0.5, 0.5, 1, 1, 0xff_Ffffff)
+        end
+
+        if @player.y > @window.height + 300 || @player.dead
+            @lose_txt.draw_rot(@window.width/2, @window.height/2 - 30, 10, 0, 0.5, 0.5, 1, 1, 0xff_Ffffff)
         end
     end
 
@@ -44,9 +58,13 @@ class BoyertAdventures
     def update
         unless @player.damage
             if Gosu::button_down? Gosu::KbRight
-                @player.move(:right)
+                if !@player.winner
+                    @player.move(:right)
+                end
             elsif Gosu::button_down? Gosu::KbLeft
-                @player.move(:left)
+                if !@player.winner
+                    @player.move(:left)
+                end
             else
                 @player.not_walking
             end
@@ -63,10 +81,13 @@ class BoyertAdventures
             end
         end
         @enemies.reject! {|enemy| enemy.alive?}
-        if @player.y > @window.height + 100
-            exit
+        if @player.y > @window.height + 300 && !@player.dead
+            @player.dead?
         end
-        @score = 10000000 - Gosu::milliseconds
+        if !@player.winner && !@player.dead
+            @score = 10000000 - Gosu::milliseconds
+        end
+
     end
 
 end

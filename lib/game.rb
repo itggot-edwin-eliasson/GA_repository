@@ -5,6 +5,7 @@ class Game < Gosu::Window
         super 640, 480, false, (1000/60)
         self.caption = "Boyert Adventures"
         @background_image = Gosu::Image.new('media/background.jpg')
+        @sel_sound = Gosu::Sample.new('media/Pickup_00.wav')
 
 
         setup
@@ -18,6 +19,7 @@ class Game < Gosu::Window
         unless @boyert_adventures
             if id == Gosu::KbReturn
                 if @start_menu.sel == :start
+                    @sel_sound.play
                     @boyert_adventures = BoyertAdventures.new(self)
                 else
                     exit
@@ -33,7 +35,6 @@ class Game < Gosu::Window
 
     def update
         @boyert_adventures.update if @boyert_adventures
-
 
     end
 

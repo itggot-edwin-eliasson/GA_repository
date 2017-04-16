@@ -4,6 +4,7 @@ class CollisionManager
         @player = player
         @map = map
         @enemies = enemies
+        @hit_sound = Gosu::Sample.new('media/Hit_02.wav')
         @values = []
     end
 
@@ -65,15 +66,18 @@ class CollisionManager
             if collision == :left
                 @player.stuck(collision)
                 @player.x = values[0] + @player.width
-                p values[0], values[1], @player.x, @player.y
+                if (@player.y + @player.height) == values[1]
+                    @player.not_stuck
+                end
             elsif collision == :right
                 @player.stuck(collision)
                 @player.x = values[0] - @player.width
+                if (@player.y + @player.height) == values[1]
+                    @player.not_stuck
+                end
             elsif collision == :bottom and @player.ground? == false
                 @player.on_ground
                 @player.y = values[1] - 32
-            elsif collision == nil
-
             end
 
         end
@@ -108,22 +112,23 @@ class CollisionManager
         @enemies.each do |enemy|
             enemy_rec = [enemy.x, enemy.y, enemy.width, enemy.height]
 
-            # p enemy.x + enemy.width, enemy.y
-
             collision = check_for_collision(player_rec, enemy_rec)
 
             if collision == :left
                 unless @player.damage || @player.invulnerable
                     @player.take_damage(collision)
+                    @hit_sound.play
                 end
             elsif collision == :right
                 unless @player.damage || @player.invulnerable
                     @player.take_damage(collision)
+                    @hit_sound.play
                 end
             elsif collision == :bottom
+                enemy.kill
                 @player.on_ground
                 @player.jumping
-                enemy.kill
+
             end
 
         end
@@ -182,14 +187,18 @@ class CollisionManager
     end
 
     def update
-        player_enemy_collision
-        player_map_collision
-        enemy_map_collision
-        if @player.x <= 0
-            @player.stuck(:left)
-        elsif @player.x + @player.width >= @map.b_values[-1][0]
-            @player.stuck(:right)
+        if !@player.dead
+            player_enemy_collision
+            player_map_collision
+            if @player.x <= 0
+                @player.stuck(:left)
+            elsif @player.x + @player.width >= @map.b_values[-1][0]-32*5
+                @player.win
+            end
+        else
+            @player.jumping
         end
+        enemy_map_collision
     end
 
     def draw(camera)

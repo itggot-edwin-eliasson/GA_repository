@@ -1,7 +1,7 @@
 class Player
 
     attr_accessor :x, :y
-    attr_accessor :on_ground, :invulnerable, :damage, :lives, :walking, :stuck
+    attr_accessor :on_ground, :invulnerable, :damage, :lives, :walking, :stuck, :speed, :vel_y, :g, :winner, :dead
 
     def initialize(window)
         @x = 200
@@ -24,6 +24,11 @@ class Player
         @time = 0
         @invulnerable = false
         @stuck = false
+        @winner = false
+        @jump_sound = Gosu::Sample.new('media/SFX_Jump_08.wav')
+        @win_sound = Gosu::Sample.new('media/Jingle_Win_00.wav')
+        @lose_sound = Gosu::Sample.new('media/Jingle_Lose_00.wav')
+        @dead = false
     end
 
     def height
@@ -64,21 +69,8 @@ class Player
         @lives.delete_at(@lives.length - 1)
         @collision = collision
         @damage = true
-        # tick = 0
-        # while tick < 30
-        #     if @collision == :right
-        #         @x -= 1
-        #     else
-        #         @x += 1
-        #     end
-        #     tick += 1
-        # end
-
-        # if tick == 30
-        #     @damage = false
-        # end
         if @lives.length == 0
-            exit
+            dead?
         end
 
     end
@@ -90,7 +82,6 @@ class Player
 
     def jump
         count
-        # @x = (@vel_x * @t + 0) + @org_x
         @y = -1 * (((-@g*@t**2)/2) + @vel_y * @t + 0) + @org_y
     end
 
@@ -121,11 +112,27 @@ class Player
         @walking = false
     end
 
+    def win
+        @winner = true
+        if @on_ground
+            jumping
+            @jump_sound.play
+        end
+        @win_sound.play
+
+        @x -= 5
+    end
+
+    def dead?
+        @dead = true
+        @lose_sound.play
+    end
 
     def button_down(button)
         unless @damage
             if button == Gosu::KbSpace or button == Gosu::KbUp and @on_ground
                 jumping
+                @jump_sound.play
             elsif button == Gosu::KbEscape
                 exit
             end
@@ -133,10 +140,6 @@ class Player
     end
 
     def update
-        # p @x,@y
-        # p @on_ground
-        # p @speed
-        p @stuck
 
         if @damage
             if @collision == :right
@@ -148,7 +151,6 @@ class Player
             if @time > 6
                 @damage = false
                 @invulnerable = true
-                # @time = 0
             else
                 @time += 1
             end
@@ -157,7 +159,7 @@ class Player
 
         if @invulnerable
 
-            if @time > 50
+            if @time > 60
                 @invulnerable = false
                 @time = 0
             else
