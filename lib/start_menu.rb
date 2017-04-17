@@ -26,7 +26,7 @@ class StartMenu
     end
 
     def draw
-        @game_title.draw_rot(@window.width/2, 100, 10, 0, 0.5, 0.5, 1, 1, 0xff_F19900)
+        @game_title.draw_rot(@window.width/2, 120, 10, 0, 0.5, 0.5, 1, 1, 0xff_E19A00)
         if @options[0] == :start
             @start_game_txt = Gosu::Image.from_text('Start', 56, {font: 'media/Fipps-Regular.ttf'})
             @quit_game_txt = Gosu::Image.from_text('Quit', 48, {font: 'media/Fipps-Regular.ttf'})

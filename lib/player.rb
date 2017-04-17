@@ -181,8 +181,6 @@ class Player
             @current_player = @player_tiles.first
         end
 
-        # p @lives.length
-
     end
 
     def draw (camera)

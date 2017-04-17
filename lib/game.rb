@@ -5,7 +5,8 @@ class Game < Gosu::Window
     def initialize
         super 640, 480, false, (1000/60)
         self.caption = "Boyert Adventures"
-        @background_image = Gosu::Image.new('media/background.jpg')
+        @background_image = Gosu::Image.new('media/parallax-mountain-bg.png')
+        @mountain_image = Gosu::Image.new('media/parallax-mountain-mountains.png')
         @sel_sound = Gosu::Sample.new('media/Pickup_00.wav')
         @music = Gosu::Song.new('media/Loop_1.ogg')
 
@@ -41,7 +42,8 @@ class Game < Gosu::Window
     end
 
     def draw
-        @background_image.draw(0,0,-2)
+        @background_image.draw(0,0,-2, 3, 3)
+        @mountain_image.draw(0, 0, -1 , 3, 3)
         @boyert_adventures.draw if @boyert_adventures
         unless @boyert_adventures
             @start_menu.draw

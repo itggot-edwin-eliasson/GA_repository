@@ -36,7 +36,6 @@ class Enemy
 
     def jump
         count
-        # @x = (@vel_x * @t + 0) + @org_x
         @y = -1 * (((-@g*@t**2)/2) + @vel_y * @t + 0) + @org_y
     end
 
@@ -81,7 +80,6 @@ class Enemy
 
 
     def draw (camera)
-        # @image.draw(@x - camera.x, @y, 2)
 
         if @direction == :right
             @image.draw(@x + @image.width - camera.x, @y, 2, -1)

@@ -4,7 +4,7 @@ class BoyertAdventures
 
     def initialize(window)
         @window = window
-        @background_image = Gosu::Image.new('media/background.jpg')
+        @background_image = Gosu::Image.new('media/parallax-mountain-bg.png')
         @win_txt = Gosu::Image.from_text('YOU WIN!', 72, {font: 'media/Fipps-Regular.ttf'})
         @lose_txt = Gosu::Image.from_text('GAME OVER', 72, {font: 'media/Fipps-Regular.ttf'})
         @lvl_txt = Gosu::Font.new( 32, {name: 'media/Fipps-Regular.ttf'})
@@ -32,7 +32,6 @@ class BoyertAdventures
             end
         end
         @collision_manager.draw(@camera)
-        @background_image.draw(0,0,-2)
         @map.draw
         @score_text.draw("SCORE: #{@score}", 480, 10, 10, 1.0, 1.0, 0xff_ffffff)
 
@@ -69,9 +68,6 @@ class BoyertAdventures
                 @player.not_walking
             end
         end
-        # if !Gosu::button_down? Gosu::KbLeft and !Gosu::button_down? Gosu::KbRight
-        #     @player.standing_still
-        # end
         @player.update
         @collision_manager.update
         @camera.update(@map)

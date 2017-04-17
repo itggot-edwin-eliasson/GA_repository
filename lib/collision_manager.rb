@@ -8,51 +8,6 @@ class CollisionManager
         @values = []
     end
 
-    # def on_ground
-    #     @map.array.each_with_index do |row, y|
-    #         row.each_with_index do |object, x|
-    #             if object == "b"
-    #                 map_range_x = 0
-    #                 map_range_y = 0
-    #                 p_range_x = 1
-    #                 while map_range_x < 33
-    #                     while map_range_y < 33
-    #                         while p_range_x < @player.width
-    #                             if (@player.y + @player.height).round > (y*32 + map_range_y) and (@player.x + p_range_x) == (x*32 + map_range_x)
-    #                                 @player.on_ground
-    #                             end
-    #                             p_range_x += 1
-    #                         end
-    #                         map_range_x += 1
-    #                         map_range_y += 1
-    #                     end
-    #                 end
-    #             end
-    #         end
-    #     end
-    # end
-
-    # def on_ground_2
-    #     @map.b_values.each do |values|
-    #         rect1_left = @player.x
-    #         rect1_right = @player.x + @player.width
-    #         rect2_left = values[0]
-    #         rect2_right = values[0] + 32
-    #         rect1_top = @player.y
-    #         rect1_bottom = @player.y + @player.height
-    #         rect2_top = values[1]
-    #         rect2_bottom = values[1] + 32
-    #         if !(rect2_left > rect1_right || rect2_right < rect1_left || rect2_top > rect1_bottom || rect2_bottom < rect1_top)
-    #             p rect2_left, rect2_top, @player.ground?
-    #             @player.on_ground
-    #             @player.dont_move
-    #             @player.y = rect2_top-32
-    #         else
-    #             @player.not_on_ground
-    #         end
-    #     end
-    # end
-
     def player_map_collision
         @player_rec = [@player.x, @player.y, @player.width, @player.height]
         @player.not_on_ground
